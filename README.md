@@ -1,4 +1,4 @@
-#  TYT MOGLA BbITb VASHA REKLAMA
+#  TYT MOGLA BbITb VASHA REKLAMA!
 
 This project provides a widget to **display and process bank operations data**. It includes functions for filtering, sorting, masking, and analyzing transaction data through both functional and generator-based approaches.
 
