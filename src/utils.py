@@ -11,6 +11,7 @@ file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(m
 file_handler.setFormatter(file_formatter)
 logger.addHandler(file_handler)
 
+
 def load_transactions(filepath):
     """
     Загружает данные о транзакциях из JSON-файла.  Логирует ошибки и исключения.
