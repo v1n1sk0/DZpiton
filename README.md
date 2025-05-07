@@ -1,155 +1,157 @@
-#  TYT MOGLA BbITb VASHA REKLAMA
+## TYT MOGLA BbITb VASHA REKLAMA
 
-This project provides a widget to **display and process bank operations data**. It includes functions for filtering, sorting, masking, and analyzing transaction data through both functional and generator-based approaches.
+This project provides a widget for displaying and processing bank operations data, including filtering and sorting.
 
----
-
-##  Installation
-
-1. **Clone the repository**:
+Installation:
 
 ```bash
 git clone <repository_url>
 ```
-
-2. **Install dependencies**:
-
 ```bash
 pip install -r requirements.txt
 ```
 
-Make sure your `requirements.txt` includes at least the following:
+# Usage:
 
-```
-masks
-pytest
-pytest-cov
-```
-
----
-
-##  Usage
-
-The main script is located at:
-
-```
-src/main.py
-```
-
-It imports and demonstrates usage of functions from:
-- `src/processing.py`
-- `src/masks.py`
-- `src/generators.py`
-
-To run the script:
-
+Run main.py:
 ```bash
-python src/main.py
+python main.py
+``` 
+
+Follow the interactive menu to:
+
+* Load transactions from JSON, CSV, or XLSX files
+
+* Filter transactions by status (EXECUTED, CANCELED, PENDING)
+
+* Sort transactions by date (ascending/descending)
+
+* Filter by currency (RUB only or all)
+
+* Search in transaction descriptions
+
+* View category statistics
+
+### Main Features
+Core Modules
+
+* Interactive command-line interface
+* Transaction processing pipeline
+* Integrated display of masked transaction data
+* Statistical analysis by categories
+
+### Newly Added Functions:
+* process_transactions() - Main transaction processing workflow 
+* print_transaction() - Formats and displays transaction details 
+* get_user_choice() - Handles user input with validation 
+* filter_transactions_by_description() - Regex-based description search 
+* count_transactions_by_category() - Category statistics counter
+
+### Existing Functions (Enhanced):
+* filter_by_state() - Now case-insensitive 
+* sort_by_date() - Supports both ascending/descending
+* mask_account_card() - Improved account/card detection 
+* calculate_transaction_amount() - Added currency conversion
+
+## Function Details
+
+Data Processing (processing.py)
+```python
+filter_by_state(operations, state='EXECUTED')  # Case-insensitive filtering
+sort_by_date(operations, reverse=True)         # Date sorting
+count_transactions_by_category(transactions, categories)  # New category counter
+```
+Data Masking (masks.py, widget.py)
+```python
+mask_account_card(data)                # Automatically detects account/card
+get_mask_card_number(card_number)      # Shows first 6/last 4 digits (XXXXXX****XX)
+get_mask_account(account_number)       # Shows last 4 digits (****XXXX)
+```
+Utilities (regex_utils.py, external_api.py)
+```python
+filter_transactions_by_description(transactions, pattern)  # Regex search
+calculate_transaction_amount(transaction)  # Automatic RUB conversion
+```
+Generators (generators.py)
+```python
+card_number_generator(start, end)      # Test card number generator
+filter_by_currency(transactions, code) # Currency filter
+transaction_descriptions(transactions) # Description extractor
+```
+@log Decorator (decorators.py)
+```python
+from src.decorators import log
+
+@log  # Console logging
+def my_function(x, y):
+    return x + y
+
+@log(filename="app.log")  # File logging
+def another_function():
+    raise ValueError("Error example")
 ```
 
-You can modify the `test_data` inside `main.py` to test your own transaction samples.
+## Features:
 
----
+Logs function start/end
 
-##  Functions Overview
+Records arguments and results
 
-###  Data Processing (processing.py)
-- `filter_by_state(operations, state='EXECUTED')`  
-  Filters a list of operations dictionaries by the `state` key.
+Captures exceptions
 
-- `sort_by_date(operations, reverse=True)`  
-  Sorts a list of operation dictionaries by the `date` key (descending by default).
+Console or file output
 
----
+# Testing:
 
-###  Data Masking (masks.py)
-- `mask_account_card(data)`  
-  Automatically detects whether `data` is a card or account and applies masking.
+### New Test Coverage
+Main application workflow
 
-- `get_mask_card_number(card_number)`  
-  Masks a card number, leaving only the first 6 and last 4 digits visible.
+User input handling
 
-- `get_mask_account(account_number)`  
-  Masks an account number, leaving only the last 4 digits visible.
+Transaction display formatting
 
-- `get_data(date_string)`  
-  Converts date strings to the format `DD.MM.YYYY`.
+Category statistics calculation
 
----
+Regex-based search functionality
 
-###  Generators (generators.py)
-- `filter_by_currency(transactions, currency_code)`  
-  Yields only transactions with a matching currency.
-
-- `transaction_descriptions(transactions)`  
-  Yields the description field from each transaction.
-
-- `card_number_generator(start, end)`  
-  Generates card numbers in the format `0000 0000 0000 0000` for testing.
-
----
-
-##  Testing
-
-This project includes a comprehensive test suite using **pytest**. Tests cover:
-
-###  Test Coverage:
-
-#### `masks.py`
-- Masks card numbers with different lengths.
-- Handles edge cases like empty strings or `None`.
-
-#### `widget.py`
-- Detects input types (card/account).
-- Masks and formats data appropriately.
-- Handles invalid date formats gracefully.
-
-#### `processing.py`
-- Filters by operation state.
-- Sorts by date in both ascending and descending order.
-- Handles missing/invalid date values.
-
-#### `generators.py`
-- Filters transactions by currency.
-- Extracts transaction descriptions.
-- Generates valid formatted card numbers within range.
-
----
-
-##  Running Tests
-
-Make sure you have `pytest` and `pytest-cov` installed:
-
+Running Tests:
 ```bash
+# Install dependencies
 pip install pytest pytest-cov
 ```
-
-Then run:
-
 ```bash
-pytest
+# Run all tests
+pytest tests/
 ```
-
-###  Coverage Report
-
-To generate a code coverage report:
-
 ```bash
-pytest --cov=.
+# With coverage report
+pytest --cov=src tests/
 ```
-
-To generate a visual HTML report:
-
 ```bash
-pytest --cov=. --cov-report html
+# HTML coverage report
+pytest --cov=src --cov-report html
+open htmlcov/index.html
 ```
+# Data Formats
+### Supported input formats:
 
-This will create an `htmlcov/` directory with `index.html` — open it in your browser to see detailed coverage results.
+JSON (via utils.py)
 
----
+CSV (via transaction_reader.py)
 
-##  Notes
+Excel (via transaction_reader.py)
 
-- Use GitFlow: create feature branches off `develop`
-- Keep commits atomic and meaningful
-- Follow PEP 8 and use linters (e.g. flake8, pylint)
+### Sample transaction structure:
+```json
+{
+  "date": "2023-05-15T14:30:00",
+  "description": "Payment",
+  "from": "Visa 1234567812345678",
+  "to": "Счет 1234567890123456",
+  "operationAmount": {
+    "amount": "100.00",
+    "currency": {"code": "USD"}
+  },
+  "state": "EXECUTED"
+}
+```
